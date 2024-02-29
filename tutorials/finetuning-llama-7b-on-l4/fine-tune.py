@@ -75,7 +75,7 @@ In the late action between Generals
 Brown and Riall, it appears our men fought
 with a courage and perseverance, that would
 """
-input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to('cuda')
 gen_tokens = model.generate(
     input_ids,
     do_sample=True,

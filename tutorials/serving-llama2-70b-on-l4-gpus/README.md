@@ -75,7 +75,7 @@ spec:
     spec:
       containers:
       - name: llama-2-70b
-        image: ghcr.io/huggingface/text-generation-inference:1.0.3
+        image: ghcr.io/huggingface/text-generation-inference:1.1.0
         resources:
           limits:
             nvidia.com/gpu: 2
