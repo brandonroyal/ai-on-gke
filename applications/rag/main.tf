@@ -79,12 +79,14 @@ module "infra" {
   enable_gpu         = true
   gpu_pools          = var.gpu_pools
   kubernetes_version = var.kubernetes_version
+  depends_on         = [module.project-services]
 }
 
 data "google_container_cluster" "default" {
-  count    = var.create_cluster ? 0 : 1
-  name     = var.cluster_name
-  location = var.cluster_location
+  count      = var.create_cluster ? 0 : 1
+  name       = var.cluster_name
+  location   = var.cluster_location
+  depends_on = [module.project-services]
 }
 
 locals {
@@ -189,6 +191,13 @@ module "jupyterhub" {
 
   autopilot_cluster                 = local.enable_autopilot
   workload_identity_service_account = local.jupyter_service_account
+
+  notebook_image     = "us-central1-docker.pkg.dev/ai-on-gke/rag-on-gke/jupyter-notebook-image"
+  notebook_image_tag = "v1.1-rag"
+
+  db_secret_name         = module.cloudsql.db_secret_name
+  cloudsql_instance_name = local.cloudsql_instance
+  db_region              = local.cloudsql_instance_region
 
   # IAP Auth parameters
   create_brand             = var.create_brand

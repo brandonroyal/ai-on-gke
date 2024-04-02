@@ -69,12 +69,14 @@ module "infra" {
   subnetwork_name   = "default"
   cpu_pools         = var.cpu_pools
   enable_gpu        = false
+  depends_on        = [module.project-services]
 }
 
 data "google_container_cluster" "default" {
-  count    = var.create_cluster ? 0 : 1
-  name     = var.cluster_name
-  location = var.cluster_location
+  count      = var.create_cluster ? 0 : 1
+  name       = var.cluster_name
+  location   = var.cluster_location
+  depends_on = [module.project-services]
 }
 
 locals {
@@ -147,6 +149,8 @@ module "jupyterhub" {
   workload_identity_service_account = local.workload_identity_service_account
   gcs_bucket                        = var.gcs_bucket
   autopilot_cluster                 = local.enable_autopilot
+  notebook_image                    = "jupyter/tensorflow-notebook"
+  notebook_image_tag                = "python-3.10"
 
   # IAP Auth parameters
   add_auth                 = var.add_auth
